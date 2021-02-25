@@ -1,8 +1,4 @@
-import { useState } from 'react';
-
 export default function Header({ initialSearch, performSearch }) {
-  const [search, setSearch] = useState(initialSearch);
-
   return (
     <section className="py-5 text-center container">
       <div className="row py-lg-5">
@@ -12,14 +8,14 @@ export default function Header({ initialSearch, performSearch }) {
           <form
             onSubmit={e => {
               e.preventDefault();
-              performSearch(search);
+              performSearch(initialSearch);
             }}>
             <div className="input-group">
               <input
-                value={search || ''}
+                value={initialSearch || ''}
                 onChange={e => {
                   e.preventDefault();
-                  setSearch(e.target.value);
+                  performSearch(e.target.value);
                 }}
                 type="text"
                 className="form-control"

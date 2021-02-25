@@ -4,47 +4,34 @@ import Link from 'next/link';
 
 import Song from './song';
 
-const SONGS_QUERY = gql`
-  query HomePage($page: Int!, $search: String) {
-    Songs(page: $page, search: $search) {
-      songs {
-        track_id
-        track_name
-        track_artist
-        track_popularity
-        track_album_id
-        track_album_name
-        track_album_release_date
-        playlist_name
-        playlist_id
-        playlist_genre
-        playlist_subgenre
-        danceability
-        energy
-        key
-        loudness
-        mode
-        speechiness
-        acousticness
-        instrumentalness
-        liveness
-        valence
-        tempo
-        duration_ms
-        album_cover_art_url
-      }
-      pageInfo {
-        per_page
-        current_page
-        total
-        has_more
-      }
-    }
-  }
-`;
+const MEILISEARCH_ENDPOINT = "http://localhost:7700";
+const PER_PAGE = 15;
 
-const fetcher = (page, search) =>
-  request('http://localhost:3000/api/graphql', SONGS_QUERY, { page, search });
+const fetcher = (page, query, limit) => {
+  limit = limit || PER_PAGE;
+  const offset = limit * (page - 1);
+
+  let params = { offset, limit }
+  if (query) params.q = query
+  const queryParams = (new URLSearchParams(params)).toString()
+
+  return fetch(`${MEILISEARCH_ENDPOINT}/indexes/songs/search?${queryParams}`).then((r) => {
+    return r.json()
+      .then(data => {
+        return {
+          "Songs": {
+            songs: data.hits,
+            pageInfo: {
+              current_page: page,
+              per_page: limit,
+              total: data.nbHits,
+              has_more: (data.offset + limit) < data.nbHits
+            }
+          }
+        }
+      });
+  })
+}
 
 export default function Songs({ page, search }) {
   const { data, error } = useSWR([page, search], fetcher);

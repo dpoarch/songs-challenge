@@ -1,4 +1,5 @@
 import 'bootstrap/dist/css/bootstrap.css';
+import { useState } from 'react';
 
 import { useRouter } from 'next/router';
 
@@ -24,19 +25,15 @@ export async function getServerSideProps({ params }) {
 }
 
 export default function App({ initialSearch, page }) {
-  const router = useRouter();
-
-  const performSearch = newSearch => {
-    router.replace({ pathname: `/${newSearch}` });
-  };
+  const [search, setSearch] = useState(initialSearch);
 
   return (
     <main>
-      <Header performSearch={performSearch} initialSearch={initialSearch} />
+      <Header performSearch={setSearch} initialSearch={search} />
 
       <div className="py-5 bg-light">
         <div className="container">
-          <Songs search={initialSearch} page={page} />
+          <Songs search={search} page={page} />
         </div>
       </div>
     </main>
