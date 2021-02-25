@@ -86,18 +86,18 @@ export default function Songs({ page, search }) {
 }
 
 function Pagination({ pageInfo, search }) {
-  const currentPage = pageInfo.currentPage || 1;
+  const current_page = pageInfo.current_page || 1;
 
   return (
     <nav aria-label="Page navigation">
       <ul className="pagination mt-5 d-flex justify-content-center">
-        <li className={currentPage === 1 ? 'page-item disabled' : 'page-item'}>
-          {currentPage === 1 ? (
+        <li className={current_page === 1 ? 'page-item disabled' : 'page-item'}>
+          {current_page === 1 ? (
             <span className="page-link">Previous</span>
           ) : (
             <Link
               passHref
-              href={`/${[search, currentPage - 1]
+              href={`/${[search, current_page - 1]
                 .filter(part => part)
                 .join('/')}`}>
               <a className="page-link">Previous</a>
@@ -109,7 +109,7 @@ function Pagination({ pageInfo, search }) {
           {pageInfo.has_more ? (
             <Link
               passHref
-              href={`/${[search, currentPage + 1]
+              href={`/${[search, current_page + 1]
                 .filter(part => part)
                 .join('/')}`}>
               <a className="page-link">Next</a>

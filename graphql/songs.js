@@ -19,6 +19,7 @@ export default {
       return {
         songs: matchingSongs.slice(offsetStart, offsetEnd),
         pageInfo: {
+          current_page: page,
           per_page: PER_PAGE,
           total: matchingSongs.length,
           has_more: offsetEnd < matchingSongs.length
