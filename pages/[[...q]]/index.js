@@ -27,6 +27,7 @@ export default function App({ initialSearch, page }) {
   const router = useRouter();
 
   const performSearch = newSearch => {
+    newSearch = encodeURIComponent(newSearch);
     router.replace({ pathname: `/${newSearch}` });
   };
 
